@@ -1,18 +1,30 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { APP } from './src/config.ts'
+
+/** Injects the per-child app title from src/config.ts into index.html. */
+function htmlTitle(): Plugin {
+  return {
+    name: 'html-title-from-config',
+    transformIndexHtml(html) {
+      return html.replaceAll('__APP_TITLE__', APP.title)
+    },
+  }
+}
 
 export default defineConfig({
-  base: '/jasper-artbox/',
+  base: APP.base,
   plugins: [
     react(),
+    htmlTitle(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['apple-touch-icon.png'],
       manifest: {
-        name: "Jasper's Art Box",
-        short_name: 'Art Box',
-        description: "Jasper's painting memory box — photos, voice stories, places and times.",
+        name: APP.title,
+        short_name: APP.shortName,
+        description: `${APP.childName}'s painting memory box — photos, voice stories, places and times.`,
         theme_color: '#FFF6DF',
         background_color: '#FFFDF6',
         display: 'standalone',

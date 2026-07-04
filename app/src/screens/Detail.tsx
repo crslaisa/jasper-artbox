@@ -4,6 +4,7 @@ import { db } from '../db'
 import { decor, formatDate, formatDateTime, useObjectUrl } from '../lib/ui'
 import { formatDuration } from '../lib/audio'
 import { Waveform } from '../components/Waveform'
+import { APP } from '../config'
 import type { Screen } from '../nav'
 
 interface Props {
@@ -53,7 +54,7 @@ export function Detail({ id, go }: Props) {
     })
     const text = [
       painting.title || 'A masterpiece',
-      `by Jasper${painting.place ? ` · ${painting.place}` : ''} · ${formatDate(painting.takenAt)}`,
+      `by ${APP.childName}${painting.place ? ` · ${painting.place}` : ''} · ${formatDate(painting.takenAt)}`,
     ].join('\n')
     if (navigator.canShare?.({ files: [file] })) {
       try {
@@ -221,7 +222,7 @@ export function Detail({ id, go }: Props) {
                 </button>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 17 }}>
-                    Jasper's story
+                    {APP.childName}'s story
                     {painting.audioDuration ? ` · ${formatDuration(painting.audioDuration)}` : ''}
                   </div>
                   <Waveform seed={painting.id + 5} accent="var(--green)" active={playing} />
@@ -247,7 +248,7 @@ export function Detail({ id, go }: Props) {
                   className="text-input"
                   style={{ fontSize: 18, minHeight: 80, resize: 'vertical' }}
                   value={storyDraft}
-                  placeholder="What did Jasper say about it?"
+                  placeholder={`What did ${APP.childName} say about it?`}
                   onChange={(e) => setStoryDraft(e.target.value)}
                   autoFocus
                 />
@@ -271,12 +272,12 @@ export function Detail({ id, go }: Props) {
                 {painting.story ? (
                   `“${painting.story}”`
                 ) : (
-                  <span style={{ color: 'var(--faint)' }}>Tap to write what Jasper said…</span>
+                  <span style={{ color: 'var(--faint)' }}>Tap to write what {APP.childName} said…</span>
                 )}
               </button>
             )}
             <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: 9, lineHeight: 1.4 }}>
-              By Jasper (age 6).
+              By {APP.childName} (age {APP.childAge}).
               <br />
               {painting.place ? `${painting.place} · ` : ''}
               {formatDateTime(painting.takenAt)}

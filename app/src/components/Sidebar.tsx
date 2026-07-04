@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import { exportBackup, importBackup } from '../lib/backup'
+import { APP, AVATAR_INITIAL } from '../config'
 import type { Screen } from '../nav'
 
 interface Props {
@@ -51,18 +52,18 @@ export function Sidebar({ screen, go }: Props) {
     <nav className="sidebar">
       <div>
         <div className="logo">
-          Jasper's
+          {APP.titleTop}
           <br />
-          Art Box
+          {APP.titleBottom}
         </div>
         <div className="logo-underline" />
       </div>
 
       <div className="profile">
-        <div className="avatar">J</div>
+        <div className="avatar">{AVATAR_INITIAL}</div>
         <div>
-          <div style={{ fontSize: 18 }}>Jasper</div>
-          <div style={{ fontSize: 13, color: 'var(--faint)' }}>age 6</div>
+          <div style={{ fontSize: 18 }}>{APP.childName}</div>
+          <div style={{ fontSize: 13, color: 'var(--faint)' }}>age {APP.childAge}</div>
         </div>
       </div>
 
