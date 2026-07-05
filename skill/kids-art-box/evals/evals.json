@@ -1,0 +1,17 @@
+{
+  "skill_name": "kids-art-box",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "我女儿叫米娅（Mia），5岁，特别爱画画，家里画纸堆成山了。帮我做一个能把她的画拍下来存起来的小应用吧，先在本地跑起来给我看看效果就行，不用发布到网上。",
+      "expected_output": "克隆 jasper-artbox 模板，config.ts 改成 Mia/5岁/Mia's Art Box、base 改 '/'，npm install 后 dev server 跑起来，告知本地地址和后续可部署",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "my son Leo (age 7) draws a ton of dinosaurs and i keep losing the papers lol. can you set up that kids art box thing for him? just run it locally for now, we'll deploy later. maybe call it \"Leo's Dino Gallery\"",
+      "expected_output": "克隆模板，config.ts 改 Leo/7/标题 Leo's Dino Gallery（titleTop/titleBottom 合理拆分），本地跑通并说明如何之后部署",
+      "files": []
+    }
+  ]
+}

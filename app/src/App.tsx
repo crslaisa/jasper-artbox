@@ -4,7 +4,7 @@ import { Gallery } from './screens/Gallery'
 import { Capture } from './screens/Capture'
 import { Detail } from './screens/Detail'
 import { Wall } from './screens/Wall'
-import { requestPersistentStorage } from './db'
+import { migrateLegacyBlobs, requestPersistentStorage } from './db'
 import { APP } from './config'
 import type { Screen } from './nav'
 
@@ -14,6 +14,7 @@ export default function App() {
   useEffect(() => {
     document.title = APP.title
     requestPersistentStorage()
+    migrateLegacyBlobs()
   }, [])
 
   return (

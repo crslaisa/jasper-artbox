@@ -36,7 +36,7 @@ export async function exportBackup(): Promise<void> {
     zip.file(thumbFile, p.thumb)
     let audioFile: string | null = null
     if (p.audio) {
-      audioFile = `audio/${p.id}.${audioExt(p.audio.type)}`
+      audioFile = `audio/${p.id}.${audioExt(p.audioType ?? '')}`
       zip.file(audioFile, p.audio)
     }
     entries.push({
@@ -53,13 +53,13 @@ export async function exportBackup(): Promise<void> {
       photoFile,
       thumbFile,
       audioFile,
-      audioType: p.audio?.type ?? null,
+      audioType: p.audioType,
     })
   }
 
-  zip.file('metadata.json', JSON.stringify({ version: 1, exportedAt: Date.now(), entries }, null, 2))
+  zip.file('metadata.json', JSON.stringify({ version: 2, exportedAt: Date.now(), entries }, null, 2))
   const blob = await zip.generateAsync({ type: 'blob' })
-  const name = `jasper-artbox-backup-${new Date().toISOString().slice(0, 10)}.zip`
+  const name = `art-box-backup-${new Date().toISOString().slice(0, 10)}.zip`
 
   const file = new File([blob], name, { type: 'application/zip' })
   if (navigator.canShare?.({ files: [file] })) {
@@ -94,14 +94,12 @@ export async function importBackup(file: Blob): Promise<number> {
     const photoZip = zip.file(e.photoFile)
     const thumbZip = zip.file(e.thumbFile)
     if (!photoZip || !thumbZip) continue
-    const photo = new Blob([await photoZip.async('arraybuffer')], { type: 'image/jpeg' })
-    const thumb = new Blob([await thumbZip.async('arraybuffer')], { type: 'image/jpeg' })
-    let audio: Blob | null = null
+    const photo = await photoZip.async('arraybuffer')
+    const thumb = await thumbZip.async('arraybuffer')
+    let audio: ArrayBuffer | null = null
     if (e.audioFile) {
       const audioZip = zip.file(e.audioFile)
-      if (audioZip) {
-        audio = new Blob([await audioZip.async('arraybuffer')], { type: e.audioType ?? 'audio/mp4' })
-      }
+      if (audioZip) audio = await audioZip.async('arraybuffer')
     }
     await db.paintings.add({
       title: e.title,
@@ -115,8 +113,11 @@ export async function importBackup(file: Blob): Promise<number> {
       createdAt: e.createdAt,
       audioDuration: e.audioDuration,
       photo,
+      photoType: 'image/jpeg',
       thumb,
+      thumbType: 'image/jpeg',
       audio,
+      audioType: audio ? (e.audioType ?? 'audio/mp4') : null,
     } as Omit<Painting, 'id'> as Painting)
     added++
   }

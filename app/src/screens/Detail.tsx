@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '../db'
-import { decor, formatDate, formatDateTime, useObjectUrl } from '../lib/ui'
+import { db, blobOf } from '../db'
+import { decor, formatDate, formatDateTime, useBufferUrl } from '../lib/ui'
 import { formatDuration } from '../lib/audio'
+import { processPhoto } from '../lib/image'
 import { Waveform } from '../components/Waveform'
 import { APP } from '../config'
 import type { Screen } from '../nav'
@@ -14,8 +15,9 @@ interface Props {
 
 export function Detail({ id, go }: Props) {
   const painting = useLiveQuery(() => db.paintings.get(id), [id])
-  const photoUrl = useObjectUrl(painting?.photo)
-  const audioUrl = useObjectUrl(painting?.audio)
+  const photoUrl = useBufferUrl(painting?.photo, painting?.photoType)
+  const audioUrl = useBufferUrl(painting?.audio, painting?.audioType)
+  const [rotating, setRotating] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const [playing, setPlaying] = useState(false)
   const [editingStory, setEditingStory] = useState(false)
@@ -48,6 +50,25 @@ export function Detail({ id, go }: Props) {
   const toggleLoved = () => db.paintings.update(id, { loved: painting.loved ? 0 : 1 })
   const toggleWall = () => db.paintings.update(id, { onWall: painting.onWall ? 0 : 1 })
 
+  const rotate = async () => {
+    if (rotating) return
+    setRotating(true)
+    try {
+      const { photo, thumb } = await processPhoto(
+        blobOf(painting.photo, painting.photoType),
+        90,
+      )
+      await db.paintings.update(id, {
+        photo: await photo.arrayBuffer(),
+        photoType: 'image/jpeg',
+        thumb: await thumb.arrayBuffer(),
+        thumbType: 'image/jpeg',
+      })
+    } finally {
+      setRotating(false)
+    }
+  }
+
   const share = async () => {
     const file = new File([painting.photo], `${painting.title || 'painting'}.jpg`, {
       type: 'image/jpeg',
@@ -63,7 +84,7 @@ export function Detail({ id, go }: Props) {
         /* user cancelled */
       }
     } else {
-      const url = URL.createObjectURL(painting.photo)
+      const url = URL.createObjectURL(blobOf(painting.photo, painting.photoType))
       const a = document.createElement('a')
       a.href = url
       a.download = `${painting.title || 'painting'}.jpg`
@@ -104,6 +125,14 @@ export function Detail({ id, go }: Props) {
             style={{ color: painting.loved ? '#fff' : 'var(--coral)', background: painting.loved ? 'var(--coral)' : '#fff' }}
           >
             ♥
+          </button>
+          <button
+            className="round-btn"
+            aria-label="Rotate photo"
+            onClick={rotate}
+            style={{ opacity: rotating ? 0.4 : 1 }}
+          >
+            ↻
           </button>
           <button className="round-btn" aria-label="Share" onClick={share}>
             ↗

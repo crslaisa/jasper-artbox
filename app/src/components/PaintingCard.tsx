@@ -1,5 +1,5 @@
 import type { Painting } from '../db'
-import { decor, formatDateTime, useObjectUrl } from '../lib/ui'
+import { decor, formatDateTime, useBufferUrl } from '../lib/ui'
 
 interface Props {
   painting: Painting
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export function PaintingCard({ painting, onOpen }: Props) {
-  const url = useObjectUrl(painting.thumb)
+  const url = useBufferUrl(painting.thumb, painting.thumbType)
   const d = decor(painting.id)
 
   return (

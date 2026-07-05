@@ -13,6 +13,7 @@ interface Props {
 
 export function Capture({ go }: Props) {
   const [photoFile, setPhotoFile] = useState<Blob | null>(null)
+  const [rotation, setRotation] = useState<0 | 90 | 180 | 270>(0)
   const [title, setTitle] = useState('')
   const [place, setPlace] = useState('')
   const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({
@@ -78,7 +79,7 @@ export function Capture({ go }: Props) {
     if (!photoFile || saving) return
     setSaving(true)
     try {
-      const { photo, thumb } = await processPhoto(photoFile)
+      const { photo, thumb } = await processPhoto(photoFile, rotation)
       const id = await db.paintings.add({
         title: title.trim(),
         story: '',
@@ -90,9 +91,12 @@ export function Capture({ go }: Props) {
         onWall: 0,
         createdAt: Date.now(),
         audioDuration: audio?.duration ?? null,
-        photo,
-        thumb,
-        audio: audio?.blob ?? null,
+        photo: await photo.arrayBuffer(),
+        photoType: 'image/jpeg',
+        thumb: await thumb.arrayBuffer(),
+        thumbType: 'image/jpeg',
+        audio: audio ? await audio.blob.arrayBuffer() : null,
+        audioType: audio?.blob.type ?? null,
         // Dexie fills in the auto-increment id
       } as Parameters<typeof db.paintings.add>[0])
       go({ name: 'detail', id: id as number })
@@ -103,7 +107,10 @@ export function Capture({ go }: Props) {
   }
 
   const onPickPhoto = (file: File | undefined) => {
-    if (file) setPhotoFile(file)
+    if (file) {
+      setPhotoFile(file)
+      setRotation(0)
+    }
   }
 
   const corners = (
@@ -124,7 +131,14 @@ export function Capture({ go }: Props) {
           <div className={`viewfinder${photoUrl ? ' has-photo' : ''}`}>
             {photoUrl ? (
               <>
-                <img src={photoUrl} alt="Your new masterpiece" />
+                <img
+                  src={photoUrl}
+                  alt="Your new masterpiece"
+                  style={{
+                    transform: `rotate(${rotation}deg)${rotation % 180 !== 0 ? ' scale(0.72)' : ''}`,
+                    transition: 'transform .2s',
+                  }}
+                />
                 <div
                   style={{
                     position: 'absolute',
@@ -169,6 +183,13 @@ export function Capture({ go }: Props) {
               disabled={!photoFile}
             >
               Retake
+            </button>
+            <button
+              style={{ fontSize: 16, color: photoFile ? 'var(--ink)' : 'var(--muted)' }}
+              onClick={() => setRotation((r) => ((r + 90) % 360) as 0 | 90 | 180 | 270)}
+              disabled={!photoFile}
+            >
+              ↻ Rotate
             </button>
             <button
               aria-label="Take photo"

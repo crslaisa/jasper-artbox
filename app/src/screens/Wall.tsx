@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db, type Painting } from '../db'
-import { decor, useObjectUrl } from '../lib/ui'
+import { decor, useBufferUrl } from '../lib/ui'
 import type { Screen } from '../nav'
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 function WallItem({ painting, onOpen }: { painting: Painting; onOpen: () => void }) {
-  const url = useObjectUrl(painting.thumb)
+  const url = useBufferUrl(painting.thumb, painting.thumbType)
   const d = decor(painting.id)
   return (
     <button className="wall-item" style={{ transform: `rotate(${d.rot * 1.4}deg)` }} onClick={onOpen}>

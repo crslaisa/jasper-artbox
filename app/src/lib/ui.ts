@@ -15,6 +15,24 @@ export function useObjectUrl(blob: Blob | null | undefined): string | null {
   return url
 }
 
+/** Object URL for stored binary data (ArrayBuffer + mime type). */
+export function useBufferUrl(
+  buf: ArrayBuffer | null | undefined,
+  type: string | null | undefined,
+): string | null {
+  const [url, setUrl] = useState<string | null>(null)
+  useEffect(() => {
+    if (!buf || buf.byteLength === 0) {
+      setUrl(null)
+      return
+    }
+    const u = URL.createObjectURL(new Blob([buf], { type: type || 'application/octet-stream' }))
+    setUrl(u)
+    return () => URL.revokeObjectURL(u)
+  }, [buf, type])
+  return url
+}
+
 export function formatDate(ts: number): string {
   return new Date(ts).toLocaleDateString('en-US', {
     month: 'short',
