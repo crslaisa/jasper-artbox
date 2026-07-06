@@ -5,11 +5,9 @@ description: 给孩子做一个专属的"画作记忆盒"网页 App 并部署上
 
 # Kids Art Box · 孩子的画作记忆盒
 
-> ⚠️ **发布者请注意（使用这份技能的人可以忽略这一块）**：本文全部 `<TEMPLATE_REPO_URL>` 需要在发布前替换成一个真实的模板仓库地址（形如 `https://github.com/<账号>/<仓库名>`）。建议专门建一个和你个人身份不强关联的账号/仓库来存放模板代码，再把地址填进来，这样分享出去之后大家看到的只是一个干净的模板仓库，不会牵出你的其他项目。替换完成后删除这一整段提示。
-
 帮用户为自己的孩子生成一个手绘涂鸦风格的 PWA（网页 App），功能：拍照收录画作、录一段孩子自己讲画的语音故事、自动记下时间和地点、画廊筛选收藏、把最爱挂上"晾衣绳画作墙"、一键导出备份。照片和录音**只存在设备本地（IndexedDB），不经过任何服务器**——这一点对家长很重要，交付时要主动说明。
 
-模板仓库：`<TEMPLATE_REPO_URL>`（Vite + React + TS + PWA，代码已把所有孩子相关信息收拢到一个配置文件，可自由使用）。
+模板仓库：`https://github.com/CLARISSALLY/kids-art-box`（Vite + React + TS + PWA，代码已把所有孩子相关信息收拢到一个配置文件，可自由使用）。
 
 ## 工作流程
 
@@ -26,7 +24,7 @@ description: 给孩子做一个专属的"画作记忆盒"网页 App 并部署上
 ### 第 2 步 · 克隆模板并改配置
 
 ```bash
-git clone --depth 1 <TEMPLATE_REPO_URL> my-kids-artbox
+git clone --depth 1 https://github.com/CLARISSALLY/kids-art-box my-kids-artbox
 cd my-kids-artbox/app
 ```
 

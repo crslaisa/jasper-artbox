@@ -13,20 +13,17 @@ kids-art-box/
 
 （内部研发用的分文件版本在 `skill\kids-art-box\`，带 `references/` 和 `evals/` 测试数据，那个不要上传。）
 
-### ⚠️ 上传前必做：替换模板仓库地址
+### ✅ 模板仓库地址已就绪
 
-`redskill-upload\kids-art-box\SKILL.md` 里所有 `<TEMPLATE_REPO_URL>` 目前是占位符，**不填真实地址技能是跑不起来的**。这是刻意的：现在的模板仓库挂在你的私人 GitHub 账号（`crslaisa`）下，直接把这个地址写进公开分享的技能里，别人会顺着链接看到你的其他仓库和活动记录。
+技能里的模板地址现在指向你专门新建的 `CLARISSALLY` 账号：`https://github.com/CLARISSALLY/kids-art-box`，和你的私人账号 `crslaisa`（放乒乓日历、Jasper 真实 App 的那个）完全分开。这个模板仓库：
 
-建议做法（任选一个）：
-1. **新建一个和个人身份不强关联的 GitHub 账号**，把 `jasper-artbox` 仓库内容 fork/推送过去，用新地址填占位符——最彻底的隔离
-2. **新建一个免费的 GitHub Organization**（不需要新账号密码），把仓库转移过去，地址变成 `github.com/<组织名>/jasper-artbox`
-3. 图省事的话也可以先不管，只在自己电脑上用这个技能（不公开发布），那占位符要手动替换成你现在的真实地址 `https://github.com/crslaisa/jasper-artbox`
-
-替换完成后，文件开头那一整段"发布者请注意"提示可以删掉。
+- 代码是干净的通用模板，默认示例孩子叫 "Alex"（不是 Jasper），和你儿子的身份无关
+- 已经 `npm install` + `npm run build` 验证过，并部署验证：https://clarissally.github.io/kids-art-box/ 可正常打开
+- 发布者提示段已从 SKILL.md 里删除
 
 上传步骤（按活动说明）：
 1. 电脑端登录小红书创作者中心 → RedSkill 管理入口
-2. 上传 `kids-art-box` 文件夹（替换好地址、删掉提示段之后的版本）
+2. 上传 `kids-art-box` 文件夹（`skill\redskill-upload\kids-art-box\`）
 3. 发笔记时"添加组件"→ RedSkill → 选择该技能 → 勾选原创 → 发布
 
 ## 二、笔记文案草稿
@@ -63,7 +60,7 @@ kids-art-box/
 ## 三、发布前检查
 
 - [x] 技能测试通过（两个场景 × 5 项标准全过，见 `kids-art-box-workspace/`）
-- [ ] **`<TEMPLATE_REPO_URL>` 已替换成不暴露个人身份的真实地址，开头提示段已删除**
+- [x] 模板仓库地址已换成 CLARISSALLY 专用账号，与个人身份隔离，且已部署验证
 - [ ] 截图里用演示数据，别泄露 Jasper 的真实画作/地点（地点会显示城市）
 - [ ] 确认创作者中心有 RedSkill 内测权限
 - [ ] 笔记里说明需要电脑端 AI Agent 工具（管理预期，减少差评）
