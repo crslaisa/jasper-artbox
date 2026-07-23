@@ -1,21 +1,16 @@
-name: Deploy to GitHub Pages
+name: Deploy to Tencent COS
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
-  group: pages
+  group: deploy
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,17 +23,12 @@ jobs:
         working-directory: app
       - run: npm run build
         working-directory: app
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: app/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Upload to Tencent COS
+        env:
+          TENCENT_SECRET_ID: ${{ secrets.TENCENT_SECRET_ID }}
+          TENCENT_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
+          TENCENT_BUCKET: ${{ secrets.TENCENT_BUCKET }}
+          TENCENT_REGION: ${{ secrets.TENCENT_REGION }}
+        run: |
+          pip install cos-python-sdk-v5 --quiet
+          python upload_to_cos.py
