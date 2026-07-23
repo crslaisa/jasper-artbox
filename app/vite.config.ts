@@ -25,6 +25,12 @@ export default defineConfig({
         name: APP.title,
         short_name: APP.shortName,
         description: `${APP.childName}'s painting memory box — photos, voice stories, places and times.`,
+        // Explicit index.html: some static hosts (e.g. COS's default object
+        // domain, without the china-mainland-ICP-license-gated "static
+        // website" mode) don't resolve a bare directory URL to index.html,
+        // so the bare `base` path alone would 404 on first launch from the
+        // home screen icon.
+        start_url: `${APP.base}index.html`,
         theme_color: '#FFF6DF',
         background_color: '#FFFDF6',
         display: 'standalone',
